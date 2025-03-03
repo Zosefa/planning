@@ -1,0 +1,60 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Panne {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <h4 class="mt-4">panne</h4>  
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.idVoiture) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.dateNonDisponible) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.Motif) }}
+                </div>
+                <div class="col-3 mt-2">
+                    <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Voiture</th>
+                        <th>Matriculation</th>
+                        <th>Date de panne</th>
+                        <th>Cause</th>
+                        <th>Chauffeur</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for panne in pannes %}
+                    <tr>
+                        <td>{{ panne.IdVoiture.voiture }}</td>
+                        <td>{{ panne.IdVoiture.matricule }}</td>
+                        <td>{{ panne.dateNonDisponible|date('d/m/Y') }}</td>
+                        <td>{{ panne.motif }}</td>
+                        <td>{{ panne.IdVoiture.IdChauffeur.IdPersonne.nom }} {{ panne.IdVoiture.IdChauffeur.IdPersonne.prenom }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">edit</button>
+                            <button class="btn btn-danger btn-sm">delete</button>
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="4" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Responsable {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <h4 class="mt-4">Responsable</h4>
+    <form method="post">
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <input type="text" class="form-control" placeholder="nom" name="nom">
+            </div>
+            <div class="col-xl-6 col-md-6">
+                <input type="text" class="form-control" placeholder="prenom" name="prenom">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="text" class="form-control" placeholder="adresse" name="adresse">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel1" name="tel1">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel2" name="tel2">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel3" name="tel3">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2 d-flex flex-column gap-2">
+                <label>Role du responsable</label>
+                <div class="d-flex gap-3">
+                    {% for role in roles %}
+                        <div>
+                            <input type="radio" name="role" value={{role.role}}>
+                            <label>{{role.role}}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Adresse</th>
+                        <th>Telephone</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for responsable in responsables %}
+                    <tr>
+                        <td>{{ responsable.nom }}</td>
+                        <td>{{ responsable.prenom }}</td>
+                        <td>{{ responsable.adresse }}</td>
+                        <td>{{ responsable.numero }}</td>
+                        <td class="d-flex gap-2 justify-content-center ">
+                            <button class="btn btn-primary btn-sm">edit</button>
+
+                            <form action="{{ path('app_responsable_delete', {'id': responsable.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce Responsable ?')">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="5" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}

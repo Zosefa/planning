@@ -1,0 +1,26 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Depanage {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <h4 class="mt-4">depanage voiture</h4>  
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.idVoitureNonDisponible) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.dateDepanage) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.prixDepanage) }}
+                </div>
+                <div class="col-3 mt-2">
+                    <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+</div>
+
+{% endblock %}

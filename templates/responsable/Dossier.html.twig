@@ -1,0 +1,308 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Voiture {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+        <div class="w-100" style="height: 100vh;">
+            <div class="container">
+                <div class="d-flex justify-content-between" style="padding-top: 1rem;">
+                    <h4>Reservation</h4>
+                    <div class="d-flex gap-2">
+
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                            Provenance
+                        </button>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Agence
+                        </button>
+                         
+                    </div>
+                </div>
+
+
+                <div class="w-100 mt-4">
+                    
+                        {{ form_start(formReservation) }}   
+                        <div class="row w-100 d-flex justify-content-center align-items-center">
+                            <h5>Information</h5>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.Titulaire) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.dateArriver) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.heureArriver) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.dateDepart) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.heureDepart) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.NombrePersonne) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.idClient) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.vol) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.hotel) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.duree) }}
+                            </div>
+
+                            <h5 class="mt-4">Voiture et indemnite chauffeur</h5>
+
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.idVoiture) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="journalier" id="journalier" class="form-control" placeholder="journalier" onchange="ChauffeurIndemnite()">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="prixChauffeur" id="prixChauffeur" class="form-control" placeholder="indemnite chauffeur">
+                            </div>
+
+
+                            <h5 class="mt-4">Carburant</h5>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="carburant" id="carburant" class="form-control" placeholder="departItineraire" value="0">
+                            </div>
+
+
+                            <h5 class="mt-4">Itinéraire</h5>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="text" name="departItineraire" id="departItineraire" class="form-control" placeholder="Départ Itinéraire">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="text" name="arriverItineraire" id="arriverItineraire" class="form-control" placeholder="Arrivée Itinéraire">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="tarif" id="tarif" class="form-control" placeholder="Tarif">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12 d-flex justify-content-between align-items-center">
+                                <input type="number" name="duree" id="duree" class="form-control w-75" placeholder="Durée">
+                                <button class="btn btn-outline-primary btn-sm" style="width: 15%;" onclick="ajouterItineraire()">Soumettre</button>
+                            </div>
+
+                            <table class="table w-100 table-responsive table-bordered mt-3" name="table">
+                                <thead>
+                                    <tr>
+                                        <th>Départ</th>
+                                        <th>Arrivée</th>
+                                        <th>Tarif</th>
+                                        <th>Durée</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itineraireTableBody" >
+                                    <tr>
+                                        <td colspan="5" class="text-center">Aucune donnée</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="mt-2">
+                                <label for="sommeTotal"><strong>Total général :</strong></label>
+                                <input type="text" id="sommeTotal" class="form-control" readonly value="0.00">
+                            </div>
+
+                            <input type="hidden" name="itineraire_data" id="itineraireData">
+
+                            <div class="w-100 mb-5">
+                                <div class="row">
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                        {{ form_row(formReservation.Type) }}
+                                    </div>
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                        {{ form_row(formReservation.prix) }}
+                                    </div>
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12 border">
+                                        {{ form_row(formReservation.idModePayement) }}
+                                    </div>
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12 border">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">reserver</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        {{ form_end(formReservation) }}
+                    
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+        
+        <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Provenance des Agences</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        {{ form_start(formNationalite) }}
+                            <div>
+                                {{ form_row(formNationalite.Nationalite) }}
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-success btn-sm mt-2">enregistrer</button>
+                        {{ form_end(formNationalite) }}
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agence</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        {{ form_start(formClient) }}
+                            <div>
+                                {{ form_row(formClient.Agence) }}
+                            </div>
+                            <div class="mt-1">
+                                {{ form_row(formClient.IdNationalite) }}
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-success btn-sm mt-2">enregistrer</button>
+                        {{ form_end(formClient) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+    </div>
+
+    <script>
+
+        function ChauffeurIndemnite() {
+            var duree = document.getElementById("reservation_duree").value; 
+            var journalier = document.getElementById("journalier").value; 
+            
+            var indemnite = parseFloat(duree) * parseFloat(journalier);
+    
+            if (!isNaN(indemnite)) {
+                document.getElementById("prixChauffeur").value = indemnite; 
+            }
+        }
+
+        var itineraireData = [];
+
+
+        function ajouterItineraire() {
+            // Récupérer les valeurs des champs
+            var depart = document.getElementById("departItineraire").value;
+            var arriver = document.getElementById("arriverItineraire").value;
+            var tarif = parseFloat(document.getElementById("tarif").value);
+            var duree = parseFloat(document.getElementById("duree").value);
+            var total = tarif * duree;
+    
+            // Vérifier que les champs ne sont pas vides
+            if (!depart || !arriver || isNaN(tarif) || isNaN(duree)) {
+                alert("Veuillez remplir tous les champs correctement.");
+                return;
+            }
+    
+            // Sélection du corps du tableau
+            var tbody = document.getElementById("itineraireTableBody");
+            
+
+            var formData = {
+                "depart" : depart,
+                "arriver" : arriver,
+                "tarif" : tarif,
+                "duree" : duree,
+                "total" : total
+            }
+
+            itineraireData.push(formData);
+            console.log(itineraireData);
+            document.getElementById("itineraireData").value = JSON.stringify(itineraireData);
+
+            console.log(document.getElementById("itineraireData").value);
+    
+            // Vérifier si la première ligne indique "Aucune donnée" et la supprimer
+            if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
+                tbody.innerHTML = "";
+            }
+    
+            // Création d'une nouvelle ligne
+            var newRow = tbody.insertRow();
+    
+            // Insertion des cellules
+            newRow.insertCell(0).innerText = depart;
+            newRow.insertCell(1).innerText = arriver;
+            newRow.insertCell(2).innerText = tarif.toFixed(2);
+            newRow.insertCell(3).innerText = duree;
+            newRow.insertCell(4).innerText = total.toFixed(2);
+    
+            // Mettre à jour la somme totale
+            mettreAJourSommeTotal();
+    
+            // Réinitialiser les champs du formulaire
+            document.getElementById("departItineraire").value = "";
+            document.getElementById("arriverItineraire").value = "";
+            document.getElementById("tarif").value = "";
+            document.getElementById("duree").value = "";
+        }
+    
+        function mettreAJourSommeTotal() {
+            var tbody = document.getElementById("itineraireTableBody");
+            var rows = tbody.getElementsByTagName("tr");
+            var sommeTotal = 0;
+    
+            for (var i = 0; i < rows.length; i++) {
+                var totalCell = rows[i].cells[4]; // 5e colonne = total
+                if (totalCell) {
+                    sommeTotal += parseInt(totalCell.innerText);
+                }
+            }
+
+
+    
+            // Mettre à jour l'input readonly avec la somme totale
+            document.getElementById("sommeTotal").value = sommeTotal.toFixed(2);
+            var indemniteChauffeur = document.getElementById("prixChauffeur").value || 0;
+            var carburant = document.getElementById("carburant").value || 0;
+            var total = document.getElementById("sommeTotal").value || 0;
+            document.getElementById("reservation_prix").value = parseFloat(parseFloat(total) + parseFloat(indemniteChauffeur) + parseFloat(carburant));
+        }
+
+
+
+
+    </script>
+
+    {% endblock %}

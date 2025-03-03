@@ -1,0 +1,47 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Chauffeur {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <div class="mt-4 mb-5">
+        <h5>Les reservations qui vous sont assignées</h5>
+    </div>
+
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Titulaire</th>
+                        <th>Date Arriver</th>
+                        <th>Heure Arriver</th>
+                        <th>Vol</th>
+                        <th>Nombre Personne</th>
+                        <th>Hotel</th>
+                        <th>Date Depart</th>
+                        <th>Heure Depart</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.Titulaire }}</td>
+                        <td>{{ reservation.dateArriver|date('d/m/Y')  }}</td>
+                        <td>{{ reservation.heureArriver }}</td>
+                        <td>{{ reservation.vol }}</td>
+                        <td>{{ reservation.NombrePersonne }}</td>
+                        <td>{{ reservation.hotel }}</td>
+                        <td>{{ reservation.dateDepart|date('d/m/Y')  }}</td>
+                        <td>{{ reservation.heureDepart }}</td>
+                        <td class="d-flex gap-2">
+                                <a href="{{ path('chauffeur_show', {'id': reservation.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="9" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+</div>
+{% endblock %}

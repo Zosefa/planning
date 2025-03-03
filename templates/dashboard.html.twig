@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('assets/simple-datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        <script src="{{ asset('assets/all.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('Toast/Toast.min.css') }}">
+    </head>
+    <body class="sb-nav-fixed">
+            <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+                <!-- Navbar Brand-->
+                <a class="navbar-brand ps-3" href="index.html">PLANNING</a>
+                <!-- Sidebar Toggle-->
+                <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+                <!-- Navbar Search-->
+                <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                    <div class="input-group">
+                        <button class="btn btn-primary" id="btnNavbarSearch" type="button">{{ user.username }}</button>
+                    </div>
+                </form>
+                <!-- Navbar-->
+                <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ path('app_profil') }}">Profil</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div id="layoutSidenav">
+                <div id="layoutSidenav_nav">
+                    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                        <div class="sb-sidenav-menu">
+                            <div class="nav">
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="nav-link active" href="{{ path('app_admin') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Tableau de bord
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_role') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Role
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_responsable') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Responsable
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_chauffeur') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Chauffeur
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_type') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Type de reservation
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_voiture') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Voiture
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_payement') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Payement
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_panne') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Panne
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_depannage') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Depannage
+                                    </a>
+                                {% endif %}
+
+                                {% if is_granted('ROLE_RESPONSABLE') %}
+                                    <a class="nav-link" href="{{ path('app_dossier') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Dossier location
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_dossier') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Dossier transfert
+                                    </a>
+                                {% endif %}
+
+                                {% if is_granted('ROLE_CHAUFFEUR') %}
+                                    <a class="nav-link" href="{{ path('chauffeur') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Reservation
+                                    </a>
+                                    <a class="nav-link" href="{{ path('chauffeur') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Archive
+                                    </a>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <div id="layoutSidenav_content">
+                    <main>
+                {% block body %}
+                
+                        <div class="container-fluid px-4">
+                            <h1 class="mt-4">Dashboard</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                            <div class="row">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-primary text-white mb-4">
+                                        <div class="card-body">Primary Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-warning text-white mb-4">
+                                        <div class="card-body">Warning Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-success text-white mb-4">
+                                        <div class="card-body">Success Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">Danger Card</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="#">View Details</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    DataTable Example
+                                </div>
+                                <div class="card-body">
+                                    <table id="datatablesSimple">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tiger Nixon</td>
+                                                <td>System Architect</td>
+                                                <td>Edinburgh</td>
+                                                <td>61</td>
+                                                <td>2011/04/25</td>
+                                                <td>$320,800</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Garrett Winters</td>
+                                                <td>Accountant</td>
+                                                <td>Tokyo</td>
+                                                <td>63</td>
+                                                <td>2011/07/25</td>
+                                                <td>$170,750</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    
+                {% endblock %}
+            </main>
+        </div>
+            </div>
+        <script src="{{ asset('assets/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('js/scripts.js') }}"></script>
+        <script src="{{ asset('Toast/Toast.min.js') }}"></script>
+        
+        {% for message in app.flashes('success') %}
+            <script>
+                Toastify({
+                    text: "{{ message }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true,
+                }).showToast();
+            </script>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <script>
+                Toastify({
+                    text: "{{ message }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    stopOnFocus: true,
+                }).showToast();
+            </script>
+        {% endfor %}
+
+    </body>
+</html>

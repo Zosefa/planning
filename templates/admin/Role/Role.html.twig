@@ -1,0 +1,81 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Role {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <h4 class="mt-4">Role Utilisateur</h4>  
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-xl-6 col-md-6 align-content-center">
+                    {{ form_row(form.role) }}
+                </div>
+                <div class="col-3 mt-2 align-content-center">
+                    <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in roles %}
+                    <tr>
+                        <td>{{ role.role }}</td>
+                        <td class="d-flex gap-2 justify-content-center">
+
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{role.id}}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+
+                            <div class="modal fade" id="exampleModal{{role.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modification role</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <form method="post" action="{{ path('app_role_edit',{'id':role.id}) }}">
+                                                <input type="text" value={{ role.role }} name="role" class="form-control">
+                                                <button type="submit" class="btn btn-success btn-sm text-right mt-2">Modifier</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <form action="{{ path('app_role_delete', {'id': role.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce rôle ?')">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="4" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Chauffeur {% endblock %}
+{% block body %}
+
+<div class="container-fluid px-4">
+    <div class="w-100 d-flex justify-content-between align-items-center">
+        <h4 class="mt-4">Chauffeur</h4> 
+
+
+        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Type de chauffeur
+        </button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Type de chauffeur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        {{ form_start(form) }}
+                            {{ form_row(form.TypeChauffeur) }}
+                            <button type="submit" class="btn btn-success btn-sm text-right mt-2">Enregistrer</button>
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <form method="post">
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <input type="text" class="form-control" placeholder="nom" name="nom">
+            </div>
+            <div class="col-xl-6 col-md-6">
+                <input type="text" class="form-control" placeholder="prenom" name="prenom">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="text" class="form-control" placeholder="adresse" name="adresse">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel1" name="tel1">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel2" name="tel2">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <input type="number" class="form-control" placeholder="tel3" name="tel3">
+            </div>
+            <div class="col-xl-6 col-md-6 mt-2">
+                <select class="form-select" name="type">
+                    <option>Choisir le type de chauffeur...</option>
+                    {% for type in types %}
+                        <option value={{ type.id }}>{{ type.typeChauffeur }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-3 mt-2">
+                <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Adresse</th>
+                        <th>Telephone</th>
+                        <th>Fonction</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chauffeur in chauffeurs %}
+                    <tr>
+                        <td>{{ chauffeur.nom }}</td>
+                        <td>{{ chauffeur.prenom }}</td>
+                        <td>{{ chauffeur.adresse }}</td>
+                        <td>{{ chauffeur.numero }}</td>
+                        <td>{{ chauffeur.type }}</td>
+                        <td class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <form action="{{ path('app_chauffeur_delete', {'id': chauffeur.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce rôle ?')">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="5" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
