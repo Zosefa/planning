@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PersonneRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
 class Personne
@@ -14,9 +15,11 @@ class Personne
     private ?int $id = null; 
 
     #[ORM\Column(length: 255)]
+    #[Groups(['grille:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['grille:read'])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]

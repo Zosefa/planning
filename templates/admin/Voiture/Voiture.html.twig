@@ -75,9 +75,6 @@
                 <div class="col-xl-6 col-md-6 mt-2"> 
                     {{ form_row(form.idMarque) }}
                 </div>
-                <div class="col-xl-6 col-md-6 mt-2">
-                    {{ form_row(form.idChauffeur) }}
-                </div>
                 <div class="col-3 mt-2">
                     <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
                 </div>
@@ -92,7 +89,6 @@
                         <th>Voiture</th>
                         <th>Matriculation</th>
                         <th>place</th>
-                        <th>Chauffeur</th>
                         <th>Marque</th>
                         <th>Action</th>
                     </tr>
@@ -103,7 +99,6 @@
                         <td>{{ voiture.voiture }}</td>
                         <td>{{ voiture.matricule }}</td>
                         <td>{{ voiture.place }}</td>
-                        <td>{{ voiture.IdChauffeur.IdPersonne.nom }} {{ voiture.IdChauffeur.IdPersonne.prenom }}</td>
                         <td>{{ voiture.IdMarque.marque }}</td>
                         <td class="d-flex gap-2">
                             <button class="btn btn-primary btn-sm">

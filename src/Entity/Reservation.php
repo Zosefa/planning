@@ -66,14 +66,29 @@ class Reservation
     #[ORM\Column]
     private ?int $duree = null;
 
-    #[ORM\Column]
-    private ?int $carburant = null;
-
     #[ORM\OneToMany(mappedBy: 'Reservation', targetEntity: Itineraire::class, orphanRemoval: true)]
     private Collection $itineraire;
 
     #[ORM\Column]
     private ?bool $status = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $volDepart = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $HotelDepart = null;
+
+    #[ORM\OneToOne(mappedBy: 'Reservation', cascade: ['persist', 'remove'])]
+    private ?Facture $facture = null;
+
+    #[ORM\Column]
+    private ?float $avance = null;
+
+    #[ORM\Column]
+    private ?float $reste = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?Chauffeur $Chauffeur = null;
 
     public function __construct()
     {
@@ -265,18 +280,6 @@ class Reservation
         return $this;
     }
 
-    public function getCarburant(): ?int
-    {
-        return $this->carburant;
-    }
-
-    public function setCarburant(int $carburant): static
-    {
-        $this->carburant = $carburant;
-
-        return $this;
-    }
-
     public function getItineraire(): Collection
 {
     return $this->itineraire;
@@ -310,6 +313,83 @@ public function isStatus(): ?bool
 public function setStatus(bool $status): static
 {
     $this->status = $status;
+
+    return $this;
+}
+
+public function getVolDepart(): ?string
+{
+    return $this->volDepart;
+}
+
+public function setVolDepart(string $volDepart): static
+{
+    $this->volDepart = $volDepart;
+
+    return $this;
+}
+
+public function getHotelDepart(): ?string
+{
+    return $this->HotelDepart;
+}
+
+public function setHotelDepart(string $HotelDepart): static
+{
+    $this->HotelDepart = $HotelDepart;
+
+    return $this;
+}
+
+public function getFacture(): ?Facture
+{
+    return $this->facture;
+}
+
+public function setFacture(Facture $facture): static
+{
+    // set the owning side of the relation if necessary
+    if ($facture->getReservation() !== $this) {
+        $facture->setReservation($this);
+    }
+
+    $this->facture = $facture;
+
+    return $this;
+}
+
+public function getAvance(): ?float
+{
+    return $this->avance;
+}
+
+public function setAvance(float $avance): static
+{
+    $this->avance = $avance;
+
+    return $this;
+}
+
+public function getReste(): ?float
+{
+    return $this->reste;
+}
+
+public function setReste(float $reste): static
+{
+    $this->reste = $reste;
+
+    return $this;
+}
+
+public function getChauffeur(): ?Chauffeur
+{
+    return $this->Chauffeur;
+}
+
+public function setChauffeur(?Chauffeur $Chauffeur): static
+{
+    $this->Chauffeur = $Chauffeur;
 
     return $this;
 }

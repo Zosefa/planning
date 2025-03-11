@@ -12,6 +12,7 @@ use App\Form\NationaliteType;
 use App\Form\ReservationType;
 use App\Repository\ChauffeurRepository;
 use App\Repository\ResponsableRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,10 @@ class DossierController extends AbstractController
     #[Route('/',name:'')]
     public function dossier(Request $request, EntityManagerInterface $em, ResponsableRepository $responsableRepository, ChauffeurRepository $chauffeurRepository): Response
     {
+
+        $em->beginTransaction();
+
+        try{
 
         $Nationalite = new Nationalite();
         $Client = new Client();
@@ -57,9 +62,6 @@ class DossierController extends AbstractController
         if($formReservation->isSubmitted() && $formReservation->isValid()){
 
             $itineraireReservation = json_decode($request->request->get('itineraire_data'),true);
-            $journalier = $request->request->get('journalier');
-            $prixChauffeur = $request->request->get('prixChauffeur');
-            $carburant = $request->request->get('carburant');
 
 
             $personne = $this->getUser()->getIdPersonne();
@@ -70,37 +72,45 @@ class DossierController extends AbstractController
             $place = $formReservation->get('NombrePersonne')->getData();
 
             if($placeDisponible->getPlace() >= $place){
-                $Reservation->setCarburant($carburant);
-                $Reservation->setStatus(false);
+                $prix = $formReservation->get('prix')->getData();
+                $avance = ($prix * 20 ) / 100;
+                $reste = $prix - $avance;
+                $Reservation
+                    ->setStatus(false)
+                    ->setAvance($avance)
+                    ->setReste($reste);
                 $em->persist($Reservation); 
                 $em->flush();
+                
+                $indemniteChauffeur = 0;
 
-                $voiture = $formReservation->get('idVoiture')->getData();
-
-
-                $Indemnite
-                    ->setIdReservation($Reservation)
-                    ->setJournalier($journalier)
-                    ->setPrix($prixChauffeur)
-                    ->setNombreJours($formReservation->get('duree')->getData())
-                    ->setIdPayement($formReservation->get('idModePayement')->getData())
-                    ->setIdChauffeur($voiture->getIdChauffeur());
-                $em->persist($Indemnite);
-                $em->flush();
-
-                foreach ($itineraireReservation as $key => $value) {
-                    $Itineraire = new Itineraire();
-                    $Itineraire
-                        ->setReservation($Reservation)
-                        ->setLieurDepart($value['depart'])
-                        ->setLieuArriver($value['arriver'])
-                        ->setCout($value['tarif'])
-                        ->setQte($value['duree'])
-                        ->setPrix($value['total']);
-                    $em->persist($Itineraire);
+                if($formReservation->get('Chauffeur')->getData() != ''){
+                    foreach ($itineraireReservation as $key => $value) {
+                        $Itineraire = new Itineraire();
+                        $indemniteChauffeur += $value['totalIndemnite'];
+                        $Itineraire
+                            ->setReservation($Reservation)
+                            ->setDescription($value['description'])
+                            ->setCout($value['tarif'])
+                            ->setQte($value['qte'])
+                            ->setPrix($value['total'])
+                            ->setCarburant($value['carburant'])
+                            ->setDateDebut(new DateTime($value['datedebut']))
+                            ->setDateFin(new DateTime($value['datefin']))
+                            ->setIndemniteChauffeur($value['totalIndemnite']);
+                        $em->persist($Itineraire);
+                        $em->flush();
+                    }
+    
+                    $Indemnite
+                        ->setIdReservation($Reservation)
+                        ->setPrix($indemniteChauffeur)
+                        ->setNombreJours($formReservation->get('duree')->getData())
+                        ->setIdPayement($formReservation->get('idModePayement')->getData())
+                        ->setIdChauffeur($formReservation->get('Chauffeur')->getData());
+                    $em->persist($Indemnite);
                     $em->flush();
                 }
-
 
 
                 $this->addFlash('success', 'reservation effectuer');
@@ -110,8 +120,20 @@ class DossierController extends AbstractController
             $this->addFlash('error', 'place insuffisant');
            
         }
-        
 
+       
+        
+        } catch (\Exception $e) {
+            $em->rollback(); 
+            $this->addFlash('error', 'une erreur s\'est produite');
+
+            return $this->render('responsable/Dossier.html.twig',[
+                'formNationalite' => $formNationalite,
+                'formClient' => $formClient,
+                'formReservation' => $formReservation,
+                'user' => $this->getUser()
+            ]);
+        }
 
         return $this->render('responsable/Dossier.html.twig',[
             'formNationalite' => $formNationalite,
@@ -119,6 +141,8 @@ class DossierController extends AbstractController
             'formReservation' => $formReservation,
             'user' => $this->getUser()
         ]);
+
+       
     }
 
     // #[Route('/transfert',name:'_transfert')]

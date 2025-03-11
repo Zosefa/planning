@@ -1,0 +1,110 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Grille chauffeur {% endblock %}
+{% block body %}
+ 
+<div class="container-fluid px-4">
+    <h4 class="mt-4">grille</h4>  
+        {{ form_start(form) }}
+            <div class="row">
+            <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.Chauffeur) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.jours) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.nuit) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.location) }}
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    {{ form_row(form.circuit) }}
+                </div>
+                <div class="col-3 mt-2">
+                    <button class="btn btn-outline-success btn-sm" type="submit">ajouter</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table w-100 table-bordered">
+                <thead>
+                    <tr>
+                        <th>Chauffeur</th>
+                        <th>Jours</th>
+                        <th>Nuit</th>
+                        <th>Location</th>
+                        <th>Circuit</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grille in grilles %}
+                    <tr>
+                        <td>
+                            {{ grille.Chauffeur.idPersonne.nom }} {{ grille.Chauffeur.idPersonne.prenom }}
+                        </td>
+                        <td>
+                            {{ grille.jours }}.00 Ar
+                        </td>
+                        <td>
+                            {{ grille.nuit }}.00 Ar
+                        </td>
+                        <td>
+                            {{ grille.location }}.00 Ar
+                        </td>
+                        <td>
+                            {{ grille.circuit }}.00 Ar
+                        </td>
+                        <td class="d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{grille.id}}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+
+                            <div class="modal fade" id="exampleModal{{grille.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modification de la grille</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <form method="post" action="{{ path('app_grille_edit',{'id':grille.id}) }}">
+                                                <input type="text" value={{ grille.jours }} name="jours" class="form-control">
+                                                <input type="text" value={{ grille.nuit }} name="nuit" class="form-control">
+                                                <input type="text" value={{ grille.location }} name="location" class="form-control">
+                                                <input type="text" value={{ grille.circuit }} name="circuit" class="form-control">
+                                                <button type="submit" class="btn btn-success btn-sm text-right mt-2">Modifier</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <form action="{{ path('app_grille_delete', {'id': grille.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer?')">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                            <td colspan="5" class="text-center">Aucun donnée trouver</td>                 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}

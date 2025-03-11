@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Chauffeur;
 use App\Entity\Client;
 use App\Entity\ModePayement;
 use App\Entity\Reservation;
@@ -43,7 +44,15 @@ class ReservationType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'vol des clients'
+                    'placeholder' => 'vol arriver des clients'
+                ],
+                'required' => true,
+            ])
+            ->add('volDepart', TextType::class,[
+                'label' => ' ',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'vol depart des clients'
                 ],
                 'required' => true,
             ])
@@ -51,7 +60,15 @@ class ReservationType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Hotel pour ramener et prendre le client'
+                    'placeholder' => 'Hotel pour ramener le client apres recuperation a Aeroport'
+                ],
+                'required' => true,
+            ])
+            ->add('HotelDepart', TextType::class,[
+                'label' => ' ',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Hotel pour prendre le client pour le ramener a l\'aeropot'
                 ],
                 'required' => true,
             ])
@@ -69,6 +86,14 @@ class ReservationType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Heure arriver du client a ivato'
+                ],
+            ])
+            ->add('heureDepart', TextType::class, [
+                'label' => ' ',
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Heure Depart du client a ivato'
                 ],
             ])
             ->add('prix', NumberType::class,[
@@ -126,6 +151,17 @@ class ReservationType extends AbstractType
                     'class' => 'form-select'
                 ],
                 'required' => true,
+            ])
+            ->add('Chauffeur', EntityType::class, [
+                'label' => ' ',
+                'class' => Chauffeur::class,
+                'placeholder' => 'Choisir le chauffeur..',
+                'attr' => [
+                    'class' => 'form-select'
+                ],
+                'choice_label' => function (Chauffeur $chauffeur) {
+                    return $chauffeur->getIdPersonne()->getNom() . ' ' . $chauffeur->getIdPersonne()->getPrenom() . ' : ' . $chauffeur->getTypeChauffeur()->getTypeChauffeur();
+                },
             ])
             ->add('Type', EntityType::class, [
                 'label' => ' ',

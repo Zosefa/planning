@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ItineraireRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ItineraireRepository::class)]
@@ -14,10 +15,7 @@ class Itineraire
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $lieurDepart = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lieuArriver = null;
+    private ?string $description = null;
 
     #[ORM\Column]
     private ?int $cout = null;
@@ -32,31 +30,31 @@ class Itineraire
     #[ORM\JoinColumn(nullable: false)]
     private ?Reservation $Reservation = null;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $DateDebut = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $DateFin = null;
+
+    #[ORM\Column]
+    private ?float $Carburant = null;
+
+    #[ORM\Column]
+    private ?float $IndemniteChauffeur = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLieurDepart(): ?string
+    public function getDescription(): ?string
     {
-        return $this->lieurDepart;
+        return $this->description;
     }
 
-    public function setLieurDepart(string $lieurDepart): static
+    public function setDescription(string $description): static
     {
-        $this->lieurDepart = $lieurDepart;
-
-        return $this;
-    }
-
-    public function getLieuArriver(): ?string
-    {
-        return $this->lieuArriver;
-    }
-
-    public function setLieuArriver(string $lieuArriver): static
-    {
-        $this->lieuArriver = $lieuArriver;
+        $this->description = $description;
 
         return $this;
     }
@@ -105,6 +103,54 @@ class Itineraire
     public function setReservation(?Reservation $Reservation): static
     {
         $this->Reservation = $Reservation;
+
+        return $this;
+    }
+
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->DateDebut;
+    }
+
+    public function setDateDebut(\DateTimeInterface $DateDebut): static
+    {
+        $this->DateDebut = $DateDebut;
+
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->DateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $DateFin): static
+    {
+        $this->DateFin = $DateFin;
+
+        return $this;
+    }
+
+    public function getCarburant(): ?float
+    {
+        return $this->Carburant;
+    }
+
+    public function setCarburant(float $Carburant): static
+    {
+        $this->Carburant = $Carburant;
+
+        return $this;
+    }
+
+    public function getIndemniteChauffeur(): ?float
+    {
+        return $this->IndemniteChauffeur;
+    }
+
+    public function setIndemniteChauffeur(float $IndemniteChauffeur): static
+    {
+        $this->IndemniteChauffeur = $IndemniteChauffeur;
 
         return $this;
     }

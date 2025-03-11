@@ -26,9 +26,6 @@ class Voiture
     #[ORM\JoinColumn(nullable: false)]
     private ?Marque $idMarque = null;
 
-    #[ORM\OneToOne(cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Chauffeur $idChauffeur = null;
 
     public function getId(): ?int
     {
@@ -79,18 +76,6 @@ class Voiture
     public function setIdMarque(?Marque $idMarque): static
     {
         $this->idMarque = $idMarque;
-
-        return $this;
-    }
-
-    public function getIdChauffeur(): ?Chauffeur
-    {
-        return $this->idChauffeur;
-    }
-
-    public function setIdChauffeur(Chauffeur $idChauffeur): static
-    {
-        $this->idChauffeur = $idChauffeur;
 
         return $this;
     }

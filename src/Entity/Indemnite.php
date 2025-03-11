@@ -29,9 +29,6 @@ class Indemnite
     private ?ModePayement $IdPayement = null;
 
     #[ORM\Column]
-    private ?float $Journalier = null;
-
-    #[ORM\Column]
     private ?int $nombreJours = null;
 
     public function getId(): ?int
@@ -83,18 +80,6 @@ class Indemnite
     public function setIdPayement(?ModePayement $IdPayement): static
     {
         $this->IdPayement = $IdPayement;
-
-        return $this;
-    }
-
-    public function getJournalier(): ?float
-    {
-        return $this->Journalier;
-    }
-
-    public function setJournalier(float $Journalier): static
-    {
-        $this->Journalier = $Journalier;
 
         return $this;
     }

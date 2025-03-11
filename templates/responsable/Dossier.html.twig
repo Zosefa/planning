@@ -36,10 +36,22 @@
                                 {{ form_row(formReservation.heureArriver) }}
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.vol) }} 
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.hotel) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
                                 {{ form_row(formReservation.dateDepart) }}
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
                                 {{ form_row(formReservation.heureDepart) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.volDepart) }}
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.HotelDepart) }}
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
                                 {{ form_row(formReservation.NombrePersonne) }}
@@ -48,62 +60,64 @@
                                 {{ form_row(formReservation.idClient) }}
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                {{ form_row(formReservation.vol) }}
-                            </div>
-                            <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                {{ form_row(formReservation.hotel) }}
-                            </div>
-                            <div class="mt-2 col-lg-6 col-md-6 col-12">
                                 {{ form_row(formReservation.duree) }}
                             </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                {{ form_row(formReservation.Type) }}
+                            </div>
 
-                            <h5 class="mt-4">Voiture et indemnite chauffeur</h5>
+                            <h5 class="mt-4">Voiture et chauffeur</h5>
 
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
                                 {{ form_row(formReservation.idVoiture) }}
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="number" name="journalier" id="journalier" class="form-control" placeholder="journalier" onchange="ChauffeurIndemnite()">
+                                {{ form_row(formReservation.Chauffeur) }}
                             </div>
-                            <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="number" name="prixChauffeur" id="prixChauffeur" class="form-control" placeholder="indemnite chauffeur">
-                            </div>
-
-
-                            <h5 class="mt-4">Carburant</h5>
-                            <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="number" name="carburant" id="carburant" class="form-control" placeholder="departItineraire" value="0">
-                            </div>
+                            
 
 
                             <h5 class="mt-4">Itinéraire</h5>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="text" name="departItineraire" id="departItineraire" class="form-control" placeholder="Départ Itinéraire">
+                                <textarea type="text" name="description" id="description" class="form-control" placeholder="description"></textarea>
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="text" name="arriverItineraire" id="arriverItineraire" class="form-control" placeholder="Arrivée Itinéraire">
+                                <input type="date" name="datedebutItineraire" id="datedebutItineraire" class="form-control" placeholder="datedebutItineraire">
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                <input type="number" name="tarif" id="tarif" class="form-control" placeholder="Tarif">
+                                <input type="date" name="datefinItineraire" id="datefinItineraire" class="form-control" placeholder="datefinItineraire">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="carburant" id="carburant" class="form-control" placeholder="carburant" value="0">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="tarif" id="tarif" class="form-control" placeholder="tarif">
+                            </div>
+                            <div class="mt-2 col-lg-6 col-md-6 col-12">
+                                <input type="number" name="indemnite" id="indemnite" class="form-control" placeholder="indemnite" value="0">
                             </div>
                             <div class="mt-2 col-lg-6 col-md-6 col-12 d-flex justify-content-between align-items-center">
-                                <input type="number" name="duree" id="duree" class="form-control w-75" placeholder="Durée">
-                                <button class="btn btn-outline-primary btn-sm" style="width: 15%;" onclick="ajouterItineraire()">Soumettre</button>
+                                <input type="number" name="qte" id="qte" class="form-control w-75" placeholder="Quantite">
+                                <div class="btn btn-outline-primary btn-sm" style="width: 15%;" onclick="ajouterItineraire()">Soumettre</div>
                             </div>
 
                             <table class="table w-100 table-responsive table-bordered mt-3" name="table">
                                 <thead>
                                     <tr>
-                                        <th>Départ</th>
-                                        <th>Arrivée</th>
+                                        <th>Description</th>
+                                        <th>Date debut</th>
+                                        <th>date fin</th>
+                                        <th>Carburant</th>
+                                        <th>Indemnite</th>
                                         <th>Tarif</th>
-                                        <th>Durée</th>
+                                        <th>Qte</th>
                                         <th>Total</th>
+                                        <th>Total indemnite Chauffeur</th>
                                     </tr>
                                 </thead>
                                 <tbody id="itineraireTableBody" >
                                     <tr>
-                                        <td colspan="5" class="text-center">Aucune donnée</td>
+                                        <td colspan="8" class="text-center">Aucune donnée</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,15 +131,12 @@
                             <div class="w-100 mb-5">
                                 <div class="row">
                                     <div class="mt-2 col-lg-6 col-md-6 col-12">
-                                        {{ form_row(formReservation.Type) }}
-                                    </div>
-                                    <div class="mt-2 col-lg-6 col-md-6 col-12">
                                         {{ form_row(formReservation.prix) }}
                                     </div>
-                                    <div class="mt-2 col-lg-6 col-md-6 col-12 border">
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12">
                                         {{ form_row(formReservation.idModePayement) }}
                                     </div>
-                                    <div class="mt-2 col-lg-6 col-md-6 col-12 border">
+                                    <div class="mt-2 col-lg-6 col-md-6 col-12">
                                         <button type="submit" class="btn btn-outline-success btn-sm">reserver</button>
                                     </div>
                                 </div>
@@ -135,16 +146,29 @@
                         {{ form_end(formReservation) }}
                     
                 </div>
-
+                <table class="table table-bordered mt-3" id="chauffeur-info" style="display: none">
+                    <thead>
+                        <tr>
+                            <th>Chauffeur</th>
+                            <th>Jour</th>
+                            <th>Nuit</th>
+                            <th>Location</th>
+                            <th>Circuit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="chauffeur"></td>
+                            <td id="jour"></td>
+                            <td id="nuit"></td>
+                            <td id="location"></td>
+                            <td id="circuit"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-
-
-
-
-
-        
         <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -170,8 +194,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -200,37 +222,80 @@
                 </div>
             </div>
         </div>
-        
-
-
     </div>
 
-    <script>
-
-        function ChauffeurIndemnite() {
-            var duree = document.getElementById("reservation_duree").value; 
-            var journalier = document.getElementById("journalier").value; 
-            
-            var indemnite = parseFloat(duree) * parseFloat(journalier);
     
-            if (!isNaN(indemnite)) {
-                document.getElementById("prixChauffeur").value = indemnite; 
-            }
-        }
+    <script src="{{ asset('Toast/Toast.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectChauffeur = document.getElementById("reservation_Chauffeur");
+            let tableInfo = document.getElementById("chauffeur-info");
+        
+            selectChauffeur.addEventListener("change", function() {
+                let chauffeurId = this.value;
+                if (chauffeurId) {
+                    fetch(`/api/grille/${chauffeurId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                let info = data[0]; // Prendre le premier élément du tableau JSON
+                                document.getElementById("chauffeur").textContent = info.Chauffeur.idPersonne.prenom;
+                                document.getElementById("jour").textContent = info.jours.toLocaleString() + " Ar";
+                                document.getElementById("nuit").textContent = info.nuit.toLocaleString() + " Ar";
+                                document.getElementById("location").textContent = info.location.toLocaleString() + " Ar";
+                                document.getElementById("circuit").textContent = info.circuit.toLocaleString() + " Ar";
+                                
+                                // Afficher le tableau
+                                tableInfo.style.display = "table";
+                                Toastify({
+                                    text: "Grille recuperer",
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                                    stopOnFocus: true,
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: "Aucune grille retrouver",
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                                    stopOnFocus: true,
+                                }).showToast();
+
+                                tableInfo.style.display = "none";
+                            }
+                        })
+                        .catch(error => console.error("Erreur lors de la récupération des données :", error));
+                } else {
+                    tableInfo.style.display = "none";
+                }
+            });
+        });
+
+
 
         var itineraireData = [];
 
 
         function ajouterItineraire() {
             // Récupérer les valeurs des champs
-            var depart = document.getElementById("departItineraire").value;
-            var arriver = document.getElementById("arriverItineraire").value;
+            var description = document.getElementById("description").value;
+            var datedebut = document.getElementById("datedebutItineraire").value;
+            var datefin = document.getElementById("datefinItineraire").value;
+            var carburant = parseFloat(document.getElementById("carburant").value);
             var tarif = parseFloat(document.getElementById("tarif").value);
-            var duree = parseFloat(document.getElementById("duree").value);
-            var total = tarif * duree;
+            var indemnite = parseFloat(document.getElementById("indemnite").value);
+            var qte = parseFloat(document.getElementById("qte").value);
+            var total = tarif * qte;
+            var totalIndemnite = indemnite * qte;
     
             // Vérifier que les champs ne sont pas vides
-            if (!depart || !arriver || isNaN(tarif) || isNaN(duree)) {
+            if (!description || !datedebut || isNaN(tarif) || isNaN(qte)) {
                 alert("Veuillez remplir tous les champs correctement.");
                 return;
             }
@@ -240,18 +305,21 @@
             
 
             var formData = {
-                "depart" : depart,
-                "arriver" : arriver,
+                "description" : description,
+                "datedebut" : datedebut,
+                "datefin" : datefin,
+                "carburant" : carburant,
                 "tarif" : tarif,
-                "duree" : duree,
-                "total" : total
+                "qte" : qte,
+                "indemnite" : indemnite,
+                "tarif" : tarif,
+                "total" : total,
+                "totalIndemnite" : totalIndemnite
             }
 
             itineraireData.push(formData);
-            console.log(itineraireData);
             document.getElementById("itineraireData").value = JSON.stringify(itineraireData);
 
-            console.log(document.getElementById("itineraireData").value);
     
             // Vérifier si la première ligne indique "Aucune donnée" et la supprimer
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
@@ -262,20 +330,27 @@
             var newRow = tbody.insertRow();
     
             // Insertion des cellules
-            newRow.insertCell(0).innerText = depart;
-            newRow.insertCell(1).innerText = arriver;
-            newRow.insertCell(2).innerText = tarif.toFixed(2);
-            newRow.insertCell(3).innerText = duree;
-            newRow.insertCell(4).innerText = total.toFixed(2);
+            newRow.insertCell(0).innerText = description;
+            newRow.insertCell(1).innerText = datedebut;
+            newRow.insertCell(2).innerText = datefin;
+            newRow.insertCell(3).innerText = carburant;
+            newRow.insertCell(4).innerText = indemnite;
+            newRow.insertCell(5).innerText = tarif.toFixed(2);
+            newRow.insertCell(6).innerText = qte;
+            newRow.insertCell(7).innerText = total.toFixed(2);
+            newRow.insertCell(8).innerText = totalIndemnite.toFixed(2);
     
             // Mettre à jour la somme totale
             mettreAJourSommeTotal();
-    
-            // Réinitialiser les champs du formulaire
-            document.getElementById("departItineraire").value = "";
-            document.getElementById("arriverItineraire").value = "";
+
+
+            document.getElementById("description").value = "";
+            document.getElementById("datedebutItineraire").value = "";
+            document.getElementById("datefinItineraire").value = "";
+            document.getElementById("carburant").value = 0;
             document.getElementById("tarif").value = "";
-            document.getElementById("duree").value = "";
+            document.getElementById("indemnite").value = 0;
+            document.getElementById("qte").value = 0;
         }
     
         function mettreAJourSommeTotal() {
@@ -284,7 +359,7 @@
             var sommeTotal = 0;
     
             for (var i = 0; i < rows.length; i++) {
-                var totalCell = rows[i].cells[4]; // 5e colonne = total
+                var totalCell = rows[i].cells[7]; 
                 if (totalCell) {
                     sommeTotal += parseInt(totalCell.innerText);
                 }
@@ -292,12 +367,9 @@
 
 
     
-            // Mettre à jour l'input readonly avec la somme totale
             document.getElementById("sommeTotal").value = sommeTotal.toFixed(2);
-            var indemniteChauffeur = document.getElementById("prixChauffeur").value || 0;
-            var carburant = document.getElementById("carburant").value || 0;
             var total = document.getElementById("sommeTotal").value || 0;
-            document.getElementById("reservation_prix").value = parseFloat(parseFloat(total) + parseFloat(indemniteChauffeur) + parseFloat(carburant));
+            document.getElementById("reservation_prix").value = parseFloat(parseFloat(total));
         }
 
 

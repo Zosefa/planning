@@ -54,6 +54,10 @@
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Chauffeur
                                     </a>
+                                    <a class="nav-link" href="{{ path('app_grille') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                        Grille chauffeur
+                                    </a>
                                     <a class="nav-link" href="{{ path('app_type') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Type de reservation
@@ -77,13 +81,9 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_RESPONSABLE') %}
-                                    <a class="nav-link" href="{{ path('app_dossier') }}">
+                                    <a class="nav-link active" href="{{ path('app_dossier') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                        Dossier location
-                                    </a>
-                                    <a class="nav-link" href="{{ path('app_dossier') }}">
-                                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                        Dossier transfert
+                                        Dossier
                                     </a>
                                 {% endif %}
 
