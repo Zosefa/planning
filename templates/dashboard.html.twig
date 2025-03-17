@@ -42,6 +42,14 @@
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Tableau de bord
                                     </a>
+                                    <a class="nav-link" href="{{ path('app_admin_dossier') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Dossier
+                                    </a>
+                                    <a class="nav-link" href="{{ path('app_suivie_dossier') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Suivie Dossier
+                                    </a>
                                     <a class="nav-link" href="{{ path('app_role') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                         Role
@@ -88,11 +96,11 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_CHAUFFEUR') %}
-                                    <a class="nav-link" href="{{ path('chauffeur') }}">
+                                    <a class="nav-link {% if app.request.get('_route') == 'chauffeur' %}active{% endif %}" href="{{ path('chauffeur') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Reservation
                                     </a>
-                                    <a class="nav-link" href="{{ path('chauffeur') }}">
+                                    <a class="nav-link {% if app.request.get('_route') == 'chauffeur_archive' %}active{% endif %}" href="{{ path('chauffeur_archive') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Archive
                                     </a>
@@ -206,6 +214,7 @@
         <script src="{{ asset('assets/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('js/scripts.js') }}"></script>
         <script src="{{ asset('Toast/Toast.min.js') }}"></script>
+
         
         {% for message in app.flashes('success') %}
             <script>

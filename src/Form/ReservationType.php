@@ -9,6 +9,9 @@ use App\Entity\Reservation;
 use App\Entity\Responsable;
 use App\Entity\TypeReservation;
 use App\Entity\Voiture;
+use App\Entity\VoitureDisponible;
+use App\Entity\VoitureNonDisponible;
+use App\Repository\VoitureRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -133,11 +136,21 @@ class ReservationType extends AbstractType
             ->add('idVoiture', EntityType::class, [
                 'label' => ' ',
                 'class' => Voiture::class,
-                'placeholder' => 'Selectionner une voiture..',
+                'required' => true,
+                'query_builder' => function (VoitureRepository $repo) {
+                    $currentDate = new \DateTime();
+                    return $repo->createQueryBuilder('v')
+                        ->leftJoin(VoitureDisponible::class, 'vd', 'WITH', 'vd.Voiture = v')
+                        ->leftJoin(VoitureNonDisponible::class, 'vnd', 'WITH', 'vnd.idVoiture = v')
+                        ->addSelect('v')
+                        ->groupBy('v.id')
+                        ->having('MAX(vd.dateDisponible) > MAX(vnd.dateNonDisponible) OR MAX(vnd.dateNonDisponible) IS NULL')
+                        ->orderBy('v.id', 'DESC');
+                },
                 'attr' => [
                     'class' => 'form-select'
                 ],
-                'required' => true,
+                'placeholder' => 'Choisir un voiture...',
                 'choice_label' => function (Voiture $voiture) {
                     return $voiture->getVoiture() . ' ' .' Matriculation : ' . $voiture->getMatricule() . ' ' .'  Place : ' . $voiture->getPlace();
                 },
@@ -154,6 +167,7 @@ class ReservationType extends AbstractType
             ])
             ->add('Chauffeur', EntityType::class, [
                 'label' => ' ',
+                'required' => false,
                 'class' => Chauffeur::class,
                 'placeholder' => 'Choisir le chauffeur..',
                 'attr' => [

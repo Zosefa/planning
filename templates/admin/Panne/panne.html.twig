@@ -30,7 +30,6 @@
                         <th>Matriculation</th>
                         <th>Date de panne</th>
                         <th>Cause</th>
-                        <th>Chauffeur</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -41,7 +40,6 @@
                         <td>{{ panne.IdVoiture.matricule }}</td>
                         <td>{{ panne.dateNonDisponible|date('d/m/Y') }}</td>
                         <td>{{ panne.motif }}</td>
-                        <td>{{ panne.IdVoiture.IdChauffeur.IdPersonne.nom }} {{ panne.IdVoiture.IdChauffeur.IdPersonne.prenom }}</td>
                         <td>
                             <button class="btn btn-primary btn-sm">edit</button>
                             <button class="btn btn-danger btn-sm">delete</button>

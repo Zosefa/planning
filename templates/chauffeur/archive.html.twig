@@ -1,5 +1,5 @@
 {% extends 'dashboard.html.twig' %}
-{% block title %} Chauffeur {% endblock %}
+{% block title %} Archive {% endblock %}
 {% block body %}
 <style>
     .table th,
@@ -11,9 +11,36 @@
 
 <div class="container-fluid px-4">
     <div class="mt-4 mb-5">
-        <h5>Les réservations qui vous sont assignées</h5>
+        <h5>Archive de tous vos missions</h5>
     </div>
-    <div class="table-responsive"> {# Ajout de la classe table-responsive #}
+
+    <div class="100">
+    <form method="post">
+        <div class="row">
+            <div class="col-3">
+                <select class="form-select" name="type">
+                    <option value="">Type de reservation...</option>
+                    {% for type in types %}
+                        <option value={{ type.id }}> {{ type.Type }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-3">
+                <input type="date" name="dateDebut" class="form-control">
+            </div>
+            <div class="col-3">
+                <input type="date" name="dateFin" class="form-control">
+            </div>
+            <div class="col-3 d-flex align-items-center gap-2">
+                <button class = "btn btn-sm btn-outline-warning" type="submit"><i class="fas fa-search"></i></button>
+                <a class = "btn btn-sm btn-outline-success" href="{{ path('chauffeur_archive') }}"><i class="fas fa-sync"></i></a>
+            </div>
+        </div>
+    </form>
+    </div>
+
+
+    <div class="table-responsive mt-3"> {# Ajout de la classe table-responsive #}
         <table class="table table-bordered">
             <thead>
                 <tr>

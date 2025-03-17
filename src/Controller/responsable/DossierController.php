@@ -28,10 +28,6 @@ class DossierController extends AbstractController
     public function dossier(Request $request, EntityManagerInterface $em, ResponsableRepository $responsableRepository, ChauffeurRepository $chauffeurRepository): Response
     {
 
-        $em->beginTransaction();
-
-        try{
-
         $Nationalite = new Nationalite();
         $Client = new Client();
         $Reservation = new Reservation();
@@ -84,24 +80,24 @@ class DossierController extends AbstractController
                 
                 $indemniteChauffeur = 0;
 
+                foreach ($itineraireReservation as $key => $value) {
+                    $Itineraire = new Itineraire();
+                    $indemniteChauffeur += $value['totalIndemnite'];
+                    $Itineraire
+                        ->setReservation($Reservation)
+                        ->setDescription($value['description'])
+                        ->setCout($value['tarif'])
+                        ->setQte($value['qte'])
+                        ->setPrix($value['total'])
+                        ->setCarburant($value['carburant'])
+                        ->setDateDebut(new DateTime($value['datedebut']))
+                        ->setDateFin(new DateTime($value['datefin']))
+                        ->setIndemniteChauffeur($value['totalIndemnite']);
+                    $em->persist($Itineraire);
+                    $em->flush();
+                }
+
                 if($formReservation->get('Chauffeur')->getData() != ''){
-                    foreach ($itineraireReservation as $key => $value) {
-                        $Itineraire = new Itineraire();
-                        $indemniteChauffeur += $value['totalIndemnite'];
-                        $Itineraire
-                            ->setReservation($Reservation)
-                            ->setDescription($value['description'])
-                            ->setCout($value['tarif'])
-                            ->setQte($value['qte'])
-                            ->setPrix($value['total'])
-                            ->setCarburant($value['carburant'])
-                            ->setDateDebut(new DateTime($value['datedebut']))
-                            ->setDateFin(new DateTime($value['datefin']))
-                            ->setIndemniteChauffeur($value['totalIndemnite']);
-                        $em->persist($Itineraire);
-                        $em->flush();
-                    }
-    
                     $Indemnite
                         ->setIdReservation($Reservation)
                         ->setPrix($indemniteChauffeur)
@@ -121,20 +117,6 @@ class DossierController extends AbstractController
            
         }
 
-       
-        
-        } catch (\Exception $e) {
-            $em->rollback(); 
-            $this->addFlash('error', 'une erreur s\'est produite');
-
-            return $this->render('responsable/Dossier.html.twig',[
-                'formNationalite' => $formNationalite,
-                'formClient' => $formClient,
-                'formReservation' => $formReservation,
-                'user' => $this->getUser()
-            ]);
-        }
-
         return $this->render('responsable/Dossier.html.twig',[
             'formNationalite' => $formNationalite,
             'formClient' => $formClient,
@@ -144,6 +126,4 @@ class DossierController extends AbstractController
 
        
     }
-
-    // #[Route('/transfert',name:'_transfert')]
 }

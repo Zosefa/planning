@@ -38,18 +38,26 @@
             <table class="table w-100 table-bordered">
                 <thead>
                     <tr>
-                        <th>Lieu depart</th>
-                        <th>Lieu arriver</th>
+                        <th>description</th>
+                        <th>date debut</th>
+                        <th>date fin</th>
+                        <th>qte</th>
+                        <th>carburant</th>
+                        <th>indemniteChauffeur</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for items in reservation.itineraire %}
                     <tr>
-                        <td>{{ items.lieurDepart }}</td>
-                        <td>{{ items.lieuArriver  }}</td>
+                        <td>{{ items.description }}</td>
+                        <td>{{ items.DateDebut|date('d/m/Y')  }}</td>
+                        <td>{{ items.DateFin|date('d/m/Y')  }}</td>
+                        <td>{{ items.qte }}</td>
+                        <td>{{ items.Carburant }}</td>
+                        <td>{{ items.IndemniteChauffeur }}</td>
                     </tr>
                     {% else %}
-                            <td colspan="2" class="text-center">Aucune Itineraire assigner</td>                 
+                            <td colspan="6" class="text-center">Aucune Itineraire assigner</td>                 
                     {% endfor %}
                 </tbody>
             </table>
@@ -58,8 +66,7 @@
             <div class="w-100 text-right mt-2">
                 <div>
                     <a href="{{ path('chauffeur') }}" class="btn btn-danger btn-sm">retour</a>
-
-                    {% if reservation.dateDepart < "now"|date("Y-m-d H:i:s") %}
+                    {% if reservation.dateDepart|date('d/m/Y') < "now"|date('d/m/Y') %}
                         <a href="{{ path('chauffeur_effectuer',{'id' : reservation.id}) }}" class="btn btn-success btn-sm">Effectuer</a>
                     {% endif %}
 

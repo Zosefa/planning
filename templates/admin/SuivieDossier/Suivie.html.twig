@@ -1,0 +1,180 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Suivie dossier {% endblock %}
+{% block body %}
+    <style>
+        .table th,
+        .table td {
+            min-width: 200px; /* Augmente la largeur des colonnes */
+            white-space: nowrap; /* Empêche le texte de se casser */
+        }
+    </style>
+
+    <div class="container-fluid px-4">
+        <div class="mt-4 mb-5">
+            <h5>Tous les reservations</h5>
+            <div class="w-100 d-flex">
+                <form action="{{ path("app_suivie_dossier") }}" method="post" class="w-100">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="date" class="form-control" placeholder="Date debut" name="dateDebut">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-6">
+                            <input type="date" class="form-control" placeholder="Date fin" name="dateFin">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-6">
+                            <select class="form-select" name="voiture">
+                                <option value="">selectionner une voiture..</option>
+                                {% for voiture in Voitures %}
+                                    <option value = {{ voiture.id }}>{{ voiture.voiture }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-6">
+                            <select class="form-select" name="type">
+                                <option value="">selectionner une type de reservation..</option>
+                                {% for type in Types %}
+                                    <option value = {{ type.id }}>{{ type.Type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-6">
+                            <select class="form-select" name="chauffeur">
+                                <option value="">selectionner un Chauffeur..</option>
+                                {% for chauffeur in Chauffeurs %}
+                                    <option value = {{ chauffeur.id }}>{{ chauffeur.idPersonne.nom }} {{ chauffeur.idPersonne.prenom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-6 d-flex align-items-center gap-2">
+                            <button class="btn btn-sm btn-warning" type="submit" name="recherche"><i class="fas fa-search"></i></button>
+                            <a class="btn btn-sm btn-success" type="submit" href="{{ path('app_suivie_dossier') }}"><i class="fas fa-sync"></i></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive"> {# Ajout de la classe table-responsive #}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Type de la réservation</th>
+                    <th>Titulaire</th>
+                    <th>Date Arrivée</th>
+                    <th>Heure Arrivée</th>
+                    <th>Vol Arrivée</th>
+                    <th>Hôtel</th>
+                    <th>Nombre Personne</th>
+                    <th>Date Départ</th>
+                    <th>Heure Départ</th>
+                    <th>Vol Départ</th>
+                    <th>Hôtel de récupération</th>
+                    <th>Chauffeur</th>
+                    <th>Voiture</th>
+                    <th>Détails</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% set duplicates = {} %} <!-- Dictionnaire pour garder trace des groupes de doublons -->
+
+                    {% for reservation in reservations %}
+                        {% set key = reservation.dateArriver|date('d/m/Y') ~ '-' ~ (reservation.Chauffeur is not empty ? reservation.Chauffeur.idPersonne.nom : '') ~ '-' ~ reservation.idVoiture.matricule %}
+                        {% if duplicates[key] is not defined %}
+                            {% set duplicates = duplicates|merge({(key): [reservation]}) %}
+                        {% else %}
+                            {% set duplicates = duplicates|merge({(key): duplicates[key] | merge([reservation])}) %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {# Affichage des lignes avec couleur de fond rouge pour les doublons #}
+                    {% for reservation in reservations %}
+                        {% set key = reservation.dateArriver|date('d/m/Y') ~ '-' ~ (reservation.Chauffeur is not empty ? reservation.Chauffeur.idPersonne.nom : '') ~ '-' ~ reservation.idVoiture.matricule %}
+                        
+                        <tr {% if duplicates[key]|length > 1 %} class="bg-danger" {% endif %}>
+                            <td>{{ reservation.Type.Type }}</td>
+                            <td>{{ reservation.Titulaire }}</td>
+                            <td>{{ reservation.dateArriver|date('d/m/Y') }}</td>
+                            <td>{{ reservation.heureArriver }}</td>
+                            <td>{{ reservation.vol }}</td>
+                            <td>{{ reservation.hotel }}</td>
+                            <td>{{ reservation.NombrePersonne }}</td>
+                            <td>{{ reservation.dateDepart|date('d/m/Y') }}</td>
+                            <td>{{ reservation.heureDepart }}</td>
+                            <td>{{ reservation.HotelDepart }}</td>
+                            <td>{{ reservation.heureDepart }}</td>
+                            <td>
+                                {% if reservation.Chauffeur is not empty %}
+                                    {{ reservation.Chauffeur.idPersonne.nom }} {{ reservation.Chauffeur.idPersonne.prenom }}
+                                {% else %}
+                                    <h6>Pas d'assignation</h6>
+                                {% endif %}
+                            </td>
+                            <td>{{ reservation.idVoiture.voiture }} {{ reservation.idVoiture.matricule }}</td>
+                            <td class="d-flex gap-2">
+                                <a href="{{ path('app_suivie_dossier_show', {'id': reservation.id}) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{ reservation.id }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <div class="modal fade" id="exampleModal{{ reservation.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modification reservation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="{{ path('app_suivie_dossier_update', {'id': reservation.id}) }}">
+                                            <input class="form-control mt-2" name="dateArriver" type="date" value={{ reservation.dateArriver|date('Y-m-d') }}>
+                                            <input class="form-control mt-2" name="dateDepart" type="date" value={{ reservation.dateDepart|date('Y-m-d') }}>
+                                            <input class="form-control mt-2" name="hotelArriver" type="text" value={{ reservation.hotel }}>
+                                            <input class="form-control mt-2" name="hotelDepart" type="text" value={{ reservation.HotelDepart }}>
+                                            <select name="voiture" class="form-select mt-2">
+                                            <option>selectionner voiture..</option>
+                                                {% for voiture in Voitures %}
+                                                    {% if voiture.id == reservation.idVoiture.id %}
+                                                        <option value={{voiture.id}} selected> {{ voiture.voiture }} </option>
+                                                    {% else %}    
+                                                        <option value={{voiture.id}}> {{ voiture.voiture }} </option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+
+                                            <select name="chauffeur" class="form-select mt-2">
+                                            <option>selectionner Chauffeur..</option>
+                                                {% for chauffeur in Chauffeurs %}
+                                                    {% if reservation.Chauffeur is not empty %}
+                                                        {% if chauffeur.id == reservation.Chauffeur.id %}
+                                                        <option value={{chauffeur.id}} selected> {{ chauffeur.idPersonne.nom }} {{ chauffeur.idPersonne.prenom }}</option>
+                                                        {% else %}    
+                                                            <option value={{chauffeur.id}}> {{ chauffeur.idPersonne.nom }} {{ chauffeur.idPersonne.prenom }}</option>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <option value={{chauffeur.id}}> {{ chauffeur.idPersonne.nom }} {{ chauffeur.idPersonne.prenom }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="12">Aucune réservation trouvée</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

@@ -82,7 +82,7 @@ class Reservation
     private ?Facture $facture = null;
 
     #[ORM\Column]
-    private ?float $avance = null;
+    private ?float $avance = null; 
 
     #[ORM\Column]
     private ?float $reste = null;
@@ -290,7 +290,7 @@ public function addItineraire(Itineraire $itineraire): static
     if (!$this->itineraire->contains($itineraire)) {
         $this->itineraire->add($itineraire);
         $itineraire->setReservation($this);
-    }
+    } 
     return $this;
 }
 

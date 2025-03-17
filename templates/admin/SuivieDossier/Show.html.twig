@@ -1,0 +1,73 @@
+{% extends 'dashboard.html.twig' %}
+{% block title %} Reservation {% endblock %}
+{% block body %}
+
+    <div class="container-fluid px-4">
+        <div class="mt-4 mb-5">
+            <h5>Detail de la reservation</h5>
+        </div>
+
+        {% for  reservation in reservations %}
+            <div class="row">
+                <div class="col-xl-6 col-md-6">
+                    <input type="text" class="form-control" placeholder="nom" value={{reservation.Titulaire}}>
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    <input type="text" class="form-control" placeholder="prenom" value={{ reservation.dateArriver|date('d/m/Y')  }}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="adresse" value={{reservation.heureArriver}}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="tel1" value={{reservation.vol}}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="tel2" value={{reservation.NombrePersonne}}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="tel3" value={{reservation.hotel}}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="tel2" value={{ reservation.dateDepart|date('d/m/Y')  }}>
+                </div>
+                <div class="col-xl-6 col-md-6 mt-2">
+                    <input type="text" class="form-control" placeholder="tel3" value={{ reservation.heureDepart }}>
+                </div>
+            </div>
+            <h6 class="mt-5 mb-4">Itineraires</h6>
+            <table class="table w-100 table-bordered">
+                <thead>
+                <tr>
+                    <th>description</th>
+                    <th>date debut</th>
+                    <th>date fin</th>
+                    <th>qte</th>
+                    <th>carburant</th>
+                    <th>indemniteChauffeur</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for items in reservation.itineraire %}
+                    <tr>
+                        <td>{{ items.description }}</td>
+                        <td>{{ items.DateDebut|date('d/m/Y')  }}</td>
+                        <td>{{ items.DateFin|date('d/m/Y')  }}</td>
+                        <td>{{ items.qte }}</td>
+                        <td>{{ items.Carburant }}</td>
+                        <td>{{ items.IndemniteChauffeur }}</td>
+                    </tr>
+                {% else %}
+                    <td colspan="6" class="text-center">Aucune Itineraire assigner</td>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="w-100 text-right mt-2">
+                <div>
+                    <a href="{{ path('app_suivie_dossier') }}" class="btn btn-danger btn-sm">retour</a>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}
