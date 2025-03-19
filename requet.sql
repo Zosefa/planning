@@ -55,3 +55,8 @@ GROUP BY m.mois_num, m.mois_nom
 ORDER BY m.mois_num;
 
 
+
+SELECT COALESCE(COUNT(*), 0) AS total_factures
+FROM facture
+WHERE YEAR(date_facture) = YEAR(CURDATE());
+

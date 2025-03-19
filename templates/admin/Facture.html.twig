@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture Proforma</title>
+    <script src="{{ asset('html2canvas.min.js') }}"></script>
+    <script src="{{ asset('jspdf.umd.min.js') }}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .facture {
+            width: 800px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        .header > div{
+            border: 2px solid #000;
+            text-align: center;
+            width: 50%;
+        }
+        .logo {
+            background: #003366;
+            color: white;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .red-text {
+            color: red;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 0px 10px 0px;
+        }
+        .facture h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #ddd;
+        }
+        .totals {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn-download {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            width: 200px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="facture" id="facture">
+        <div class="header">
+            <div>
+                <div class="logo">MALAGASY</div>
+                <div class="red-text">CAR RENTAL</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 10px;display: flex;width: 100%;justify-content: space-between;align-items: center;">
+            <div>
+                <strong>Nif :</strong> 4011880812<br>
+                <strong>STAT :</strong> 49295 11 2022 0 05780<br>
+                <strong>Adresse :</strong> Bloc C 1310 - Cité des 69 Apts - 67ha<br>
+                <strong>Téléphone :</strong> +261 34 22 431 16<br>
+                <strong>Email :</strong> contact.mcr.mg@gmail.com
+            </div>
+            <div>
+                <span style="display: flex;width: 100%;text-align: right;justify-content: space-between;">
+                <strong>Client :</strong> 
+                    {{ facture.Reservation.idClient.Agence }} </span> <span style="display:inline-block;text-align: right;width: 100%;">{{ facture.Reservation.Titulaire }} x {{ facture.Reservation.NombrePersonne }}</span><br>
+                <strong>Référence :</strong> {{ facture.NumeroFacture }}<br>
+                <strong>Date :</strong> {{ facture.DateFacture|date('d/m/Y') }}
+            </div>
+        </div>
+
+        <h2 style="padding: 30px 0px 10px 0px;">FACTURE PROFORMA</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire</th>
+                    <th>Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ facture.Reservation.Type.Type }} {{ facture.Reservation.idVoiture.voiture }} {{ facture.Reservation.idVoiture.matricule }} avec chauffeur-Guide Anglophone
+                        <ul>
+                            <li>30/05 : Transfert Aeroport (Vol ET) a l’Hotel</li>
+                            <li>31/05 au 01/06: Andasibe</li>
+                        </ul>
+                    </td>
+                    <td style=" border: 1px solid black;">
+                        <br>
+                        <ul style="list-style: none;">
+                            <li>1</li>
+                            <li>2</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <br>
+                        <ul style="list-style: none;">
+                            <li>150,000</li>
+                            <li>280,000</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <br>
+                        <ul style="list-style: none; display: flex;flex-direction: column;">
+                            <li>150,000</li>
+                            <li>280,000</li>
+                        </ul>
+                    </td>
+                </tr>
+               </tbody>
+               <tfoot style="background: #ddd;">
+                    <tr>
+                        <td colspan="3">Total [MGA]</td>
+                        <td colspan="1">1,590,000</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Acompte 20% [MGA]</td>
+                        <td colspan="1">318,000</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Reste à payer après prestation [MGA]</td>
+                        <td colspan="1">1,272,000</td>
+                    </tr>
+               </tfoot> 
+        </table>
+
+        <p style="padding: 10px 0px 10px 0px;">Arrêté la présente facture proforma à la somme de <strong>“Un million cinq cent quatre vingt dix Ariary”</strong></p>
+
+        <div>
+            <p>Conditions de réservation</p>
+            <ul>
+                <li>Acompte : 20% à la réservation (Non remboursable)</li>
+                <li>80% après la prestation</li>
+            </ul>
+        </div>
+
+        <div>
+            <p>Modes de Paiement Acceptés :</p>
+            <ul>
+                <li>Espèces</li>
+                <li>Virement bancaire sur le compte MCB : 00006 00014 00001158392 75</li>
+                <li>Chèque : à l'ordre de Andry Nirina Rasolofomalala</li>
+                <li>Mobile money (Mvola) : 034 22 431 16 au nom de Andry Nirina Rasolofomalala avec frais de retrait</li>
+            </ul>
+        </div>
+        
+        <h4>Merci de votre confiance!</h4>
+
+        <p>Le Responsable</p>
+
+        <p style="padding-top: 100px;">Andry Rasolofomalala</p>
+
+    </div>
+    <button class="btn-download" onclick="downloadPDF()">Télécharger en PDF</button>
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF("p", "mm", "a4");
+
+            html2canvas(document.querySelector("#facture"), {
+                scale: 5, // Augmente la résolution
+                useCORS: true,
+            }).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const imgWidth = 190; // Largeur ajustée pour A4
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                doc.addImage(imgData, "PNG", 10, 20, imgWidth, imgHeight);
+                doc.save("facture.pdf");
+            });
+        }
+    </script>
+</body>
+</html>

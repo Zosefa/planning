@@ -3,6 +3,7 @@
 namespace App\Controller\responsable;
 
 use App\Entity\Client;
+use App\Entity\Facture;
 use App\Entity\Indemnite;
 use App\Entity\Itineraire;
 use App\Entity\Nationalite;
@@ -11,6 +12,7 @@ use App\Form\AgenceType;
 use App\Form\NationaliteType;
 use App\Form\ReservationType;
 use App\Repository\ChauffeurRepository;
+use App\Repository\FactureRepository;
 use App\Repository\ResponsableRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +27,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DossierController extends AbstractController
 {
     #[Route('/',name:'')]
-    public function dossier(Request $request, EntityManagerInterface $em, ResponsableRepository $responsableRepository, ChauffeurRepository $chauffeurRepository): Response
+    public function dossier(Request $request, EntityManagerInterface $em, ResponsableRepository $responsableRepository, ChauffeurRepository $chauffeurRepository, FactureRepository $factureRepository): Response
     {
 
         $Nationalite = new Nationalite();
@@ -77,6 +79,31 @@ class DossierController extends AbstractController
                     ->setReste($reste);
                 $em->persist($Reservation); 
                 $em->flush();
+
+                $dateNow = new \DateTime();
+                    $year = $dateNow->format('Y');
+
+                    $lastFacture = $factureRepository->getLastFacture()[0]["total_factures"];
+                    $numero = '';
+                    if($lastFacture < 10){
+                        $lastFacture += 1;
+                        $numero = 'INV'.'00'.$lastFacture.'-'.$year;
+                    }else if($lastFacture < 100){
+                        $lastFacture += 1;
+                        $numero = 'INV'.'0'.$lastFacture.'-'.$year;
+                    }else{
+                        $lastFacture += 1;
+                        $numero = 'INV'.$lastFacture.'-'.$year;
+                    }
+
+                    $facture = new Facture();
+                    $facture
+                        ->setReservation($Reservation)
+                        ->setDateFacture($Reservation->getDateArriver())
+                        ->setNumeroFacture($numero);
+
+                    $em->persist($facture);
+                    $em->flush();
                 
                 $indemniteChauffeur = 0;
 

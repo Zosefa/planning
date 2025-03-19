@@ -16,6 +16,18 @@ class FactureRepository extends ServiceEntityRepository
         parent::__construct($registry, Facture::class);
     }
 
+    public function getLastFacture() {
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_factures
+        FROM facture
+        WHERE YEAR(date_facture) = YEAR(CURDATE())";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+    }
+
     //    /**
     //     * @return Facture[] Returns an array of Facture objects
     //     */
